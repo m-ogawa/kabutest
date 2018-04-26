@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import urllib.request
 import datetime
 from time import sleep
+import os
 
 stocklist = []
 fp = open("./stocklist.csv","r")
@@ -18,18 +19,34 @@ sel_end = "#kobetsu_left > table:nth-of-type(2) > tr:nth-of-type(5) > td:nth-of-
 pricelist_head = ["Code","Name","Market","Category","Dealunit","255orNot","Start","Max","Min","End"]
 str_today = datetime.datetime.today().strftime("%Y%m%d")
 
-fp = open("test04_output_"+str_today+".csv","w")
-fp.write(",".join(pricelist_head))
-fp.write("\n")
-fp.close()
-print("Lets start! today = " + str_today)
+exist_codelist = []
+
+if os.path.exists("test04_output_"+str_today+".csv"):
+    fp = open("test04_output_" + str_today + ".csv", "r")
+    for line in fp.readlines():
+        code = line.strip().split(",")[0]
+        exist_codelist.append(code)
+    fp.close()
+    print("File already exists. Lets start, today = " + str_today)
+else:
+    fp = open("test04_output_"+str_today+".csv","w")
+    fp.write(",".join(pricelist_head))
+    fp.write("\n")
+    fp.close()
+    print("File not exists. Lets start, today = " + str_today)
 
 flag = 0
 for stock in stocklist:
-    sleep(3)
     flag += 1
     if (flag == 1):
         continue
+
+    if stock[0] in exist_codelist:
+        print(stock[0] + " is already exists in csv file. so skipped.")
+        continue
+    else:
+        sleep(3)
+
     url = url_base + stock[0]
 
     try:

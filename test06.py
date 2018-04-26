@@ -20,12 +20,14 @@ conn.commit()
 cur = conn.cursor()
 cur.execute(
     "INSERT INTO items (name,price) VALUES (?,?)",
-    ("Orange", 520))
+    ["Orange", 520])
 conn.commit()
 
 cur = conn.cursor()
-data = [("Mango",770), ("Kiwi",400), ("Grape",800),
-        ("Peach",940), ("Persimmon",700), ("Banana",400)]
+#data = [("Mango",770), ("Kiwi",400), ("Grape",800),
+#        ("Peach",940), ("Persimmon",700), ("Banana",400)]
+data = [["Mango",770], ["Kiwi",400], ["Grape",800],
+        ["Peach",940], ["Persimmon",700], ["Banana",400]]
 cur.executemany(
     "INSERT INTO items(name, price) VALUES (?,?)",
     data)
